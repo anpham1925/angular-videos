@@ -1,7 +1,7 @@
 <div>
-  <input type="text" [(ngModel)]="latitude">
-  <input type="text" [(ngModel)]="longitude">
-  <input type="text" [(ngModel)]="radius">
+  <input type="text" [(ngModel)]="latitude" placeholder="latitude">
+  <input type="text" [(ngModel)]="longitude" placeholder="longitude">
+  <input type="text" [(ngModel)]="radius" placeholder="radius">
   <button (click)="getVideos()">Search</button>
   <br>
   <iframe *ngIf="selectedVideo" [src]="selectedVideo.embeddedLink" frameborder="0" width="640" height="360">
@@ -10,4 +10,7 @@
   <span *ngIf="!videos.length">No video found!</span>
   <br>
   <img *ngFor="let v of videos" [src]="v.snippet.thumbnails.high.url" (click)="changeVideo(v)">
+
+  <button *ngIf="prevPageToken" (click)="changePage('prev')">Previous Page</button>
+  <button *ngIf="nextPageToken" (click)="changePage('next')">Next Page</button>
 </div>

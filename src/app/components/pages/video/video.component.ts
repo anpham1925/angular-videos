@@ -15,6 +15,8 @@ export class VideoComponent implements OnInit {
   latitude;
   longitude;
   radius;
+  nextPageToken;
+  prevPageToken;
 
   constructor(
     private _videoService: VideoService,
@@ -30,7 +32,7 @@ export class VideoComponent implements OnInit {
     this.selectedVideo = video;
   }
 
-  getVideos() {
+  getVideos(page = '') {
     if (
       Number(this.latitude) !== +this.latitude ||
       Number(this.longitude) !== +this.longitude ||
@@ -41,19 +43,51 @@ export class VideoComponent implements OnInit {
     const params = {
       'key': environment.youtube_api_key,
       'location': `${this.latitude},${this.longitude}`,
+      // 'location': '21.5922529,-158.1147114',
       'locationRadius': `${this.radius}km`,
       'part': 'snippet',
       'q': 'surfing',
       'type': 'video'
     };
+    switch (page) {
+      case 'next':
+        if (!this.nextPageToken) {
+          alert('cannot go to next page');
+        }
+        params['pageToken'] = this.nextPageToken;
+        break;
+
+      case 'prev':
+        if (!this.nextPageToken) {
+          alert('cannot go to previous page');
+        }
+        params['pageToken'] = this.prevPageToken;
+        break;
+      default:
+    }
     this._videoService.getVideos(params).subscribe(
       (result): any => {
-        this.videos = result['items'];
-        this.videos.map(v => v.embeddedLink = this._santinizer.bypassSecurityTrustResourceUrl(CONSTANTS.YOUTUBE_WATCH_LINK + v.id.videoId));
-        this.changeVideo(this.videos[0]);
+        console.log(result);
+        this.handleSearchVideoResult(result);
       },
       error => {
         console.log(error);
       });
+  }
+
+  changePage(action) {
+    this.getVideos(action);
+  }
+
+  handleSearchVideoResult(result) {
+    this.videos = result['items'];
+    if (result['nextPageToken']) {
+      this.nextPageToken = result['nextPageToken'];
+    }
+    if (result['prevPageToken']) {
+      this.prevPageToken = result['prevPageToken'];
+    }
+    this.videos.map(v => v.embeddedLink = this._santinizer.bypassSecurityTrustResourceUrl(CONSTANTS.YOUTUBE_WATCH_LINK + v.id.videoId));
+    this.changeVideo(this.videos[0]);
   }
 }
