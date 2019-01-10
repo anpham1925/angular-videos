@@ -1,0 +1,5 @@
+<p>
+  <a *ngFor="let l of routes" [routerLink]="l.path">
+    {{ l.data.displayName }}
+  </a>
+</p>
