@@ -3,7 +3,9 @@ import {Routes} from '@angular/router';
 import {VideoComponent} from '../components/pages/video/video.component';
 import {RegisterComponent} from '../components/pages/register/register.component';
 
-const routes: Routes = [
+
+
+export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
@@ -26,5 +28,3 @@ const routes: Routes = [
     }
   }
 ];
-
-export default routes;

@@ -1,3 +1,3 @@
-<p>
-  video works!
-</p>
+<div>
+  <img *ngFor="let v of videos" [src]="v.snippet.thumbnails.high.url">
+</div>
