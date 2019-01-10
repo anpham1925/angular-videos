@@ -8,6 +8,7 @@ import {VideoComponent} from './components/pages/video/video.component';
 import {RegisterComponent} from './components/pages/register/register.component';
 import {HeaderComponent} from './components/shared/header/header.component';
 import {HttpClientModule} from '@angular/common/http';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {HttpClientModule} from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     HttpClientModule
