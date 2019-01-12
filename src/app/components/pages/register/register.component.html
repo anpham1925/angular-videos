@@ -1,3 +1,6 @@
-<p>
-  register works!
-</p>
+<div>
+  <input type="text" [(ngModel)]="username" placeholder="username">
+  <input type="password" [(ngModel)]="password" placeholder="password">
+  <input type="text" [(ngModel)]="fullName" placeholder="Full name">
+  <button (click)="signUp()"> Sign up </button>
+</div>

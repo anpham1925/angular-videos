@@ -3,6 +3,8 @@ import {VideoService} from '../../../services/video/video.service';
 import {environment} from '../../../../environments/environment';
 import {CONSTANTS} from '../../../config/constants';
 import {DomSanitizer} from '@angular/platform-browser';
+import {AuthService} from '../../../services/auth/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-video',
@@ -19,8 +21,10 @@ export class VideoComponent implements OnInit {
   prevPageToken;
 
   constructor(
-    private _videoService: VideoService,
-    private _santinizer: DomSanitizer
+    private videoService: VideoService,
+    private santinizer: DomSanitizer,
+    public authService: AuthService,
+    private router: Router
   ) {
   }
 
@@ -33,6 +37,11 @@ export class VideoComponent implements OnInit {
   }
 
   getVideos(page = '') {
+    if (!this.authService.token) {
+      alert('You can only search videos after logging in!');
+      return this.router.navigate(['']);
+    }
+
     if (
       Number(this.latitude) !== +this.latitude ||
       Number(this.longitude) !== +this.longitude ||
@@ -46,7 +55,6 @@ export class VideoComponent implements OnInit {
       // 'location': '21.5922529,-158.1147114',
       'locationRadius': `${this.radius}km`,
       'part': 'snippet',
-      'q': 'surfing',
       'type': 'video'
     };
     switch (page) {
@@ -65,7 +73,7 @@ export class VideoComponent implements OnInit {
         break;
       default:
     }
-    this._videoService.getVideos(params).subscribe(
+    this.videoService.getVideos(params).subscribe(
       (result): any => {
         console.log(result);
         this.handleSearchVideoResult(result);
@@ -87,7 +95,7 @@ export class VideoComponent implements OnInit {
     if (result['prevPageToken']) {
       this.prevPageToken = result['prevPageToken'];
     }
-    this.videos.map(v => v.embeddedLink = this._santinizer.bypassSecurityTrustResourceUrl(CONSTANTS.YOUTUBE_WATCH_LINK + v.id.videoId));
+    this.videos.map(v => v.embeddedLink = this.santinizer.bypassSecurityTrustResourceUrl(CONSTANTS.YOUTUBE_WATCH_LINK + v.id.videoId));
     this.changeVideo(this.videos[0]);
   }
 }

@@ -1,5 +1,8 @@
-<p>
-  <a *ngFor="let l of routes" [routerLink]="l.path">
-    {{ l.data.displayName }}
-  </a>
-</p>
+<div>
+  <div *ngFor="let r of routes">
+    <a [routerLink]="r.path" *ngIf="!r.data.requiredAuth && !authService.token || r.data.requiredAuth && authService.token">
+      {{ r.data.displayName }}
+    </a>
+  </div>
+  <button *ngIf="authService.token" (click)="logout()">Logout</button>
+</div>

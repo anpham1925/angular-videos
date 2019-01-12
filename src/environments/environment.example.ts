@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  youtube_api_key: 'AIzaSyDhIGGAlRXumweXEnF7Ftxes6GhQ6VZa6o'
+  youtube_api_key: 'AIzaSyDhIGGAlRXumweXEnF7Ftxes6GhQ6VZa6o',
+  server_host: 'http://localhost',
+  server_port: 9911
 };
 
 /*
