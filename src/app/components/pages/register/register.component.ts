@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../../services/auth/auth.service';
 import {Router} from '@angular/router';
+import {AlertService} from '../../../services/alert/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -14,26 +15,33 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {
   }
 
   ngOnInit() {
   }
 
-  signUp() {
+  async signUp() {
     try {
-      const result = this.authService.signUp({
+      const result = await this.authService.signUp({
         username: this.username,
         password: this.password,
         fullName: this.fullName
       });
-
-      alert('Successfully created account! Go to login page to login');
+      this.alertService.showSuccessMessage('Successfully created account! Please login to continue');
       this.router.navigate(['']);
     } catch (error) {
       console.log(error);
+      this.alertService.showErrorMessage(error.error.message);
     }
+  }
+
+  clear() {
+    this.username = '';
+    this.password = '';
+    this.fullName = '';
   }
 
 }

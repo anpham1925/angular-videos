@@ -5,6 +5,7 @@ import {CONSTANTS} from '../../../config/constants';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AuthService} from '../../../services/auth/auth.service';
 import {Router} from '@angular/router';
+import {AlertService} from '../../../services/alert/alert.service';
 
 @Component({
   selector: 'app-video',
@@ -24,7 +25,8 @@ export class VideoComponent implements OnInit {
     private videoService: VideoService,
     private santinizer: DomSanitizer,
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {
   }
 
@@ -39,14 +41,11 @@ export class VideoComponent implements OnInit {
   getVideos(page = '') {
     if (!this.authService.token) {
       alert('You can only search videos after logging in!');
+
       return this.router.navigate(['']);
     }
 
-    if (
-      Number(this.latitude) !== +this.latitude ||
-      Number(this.longitude) !== +this.longitude ||
-      Number(this.radius) !== +this.radius
-    ) {
+    if (!this.checkInput()) {
       return alert('check input');
     }
     const params = {
@@ -73,13 +72,16 @@ export class VideoComponent implements OnInit {
         break;
       default:
     }
+    this.alertService.startLoading();
     this.videoService.getVideos(params).subscribe(
       (result): any => {
+        this.alertService.stopLoading();
         console.log(result);
         this.handleSearchVideoResult(result);
       },
       error => {
         console.log(error);
+        this.alertService.stopLoading();
       });
   }
 
@@ -97,5 +99,28 @@ export class VideoComponent implements OnInit {
     }
     this.videos.map(v => v.embeddedLink = this.santinizer.bypassSecurityTrustResourceUrl(CONSTANTS.YOUTUBE_WATCH_LINK + v.id.videoId));
     this.changeVideo(this.videos[0]);
+  }
+
+  showMapModal() {
+    if (!this.checkInput()) {
+      return alert('check input');
+    }
+
+    $('#videoModal').modal('show');
+  }
+
+  checkInput() {
+    if (
+      Number(this.latitude) !== +this.latitude ||
+      Number(this.longitude) !== +this.longitude ||
+      Number(this.radius) !== +this.radius ||
+      Number(this.latitude) < -90 ||
+      Number(this.latitude) > 90 ||
+      Number(this.longitude) < -180 ||
+      Number(this.latitude) > 180
+    ) {
+      return false;
+    }
+    return true;
   }
 }

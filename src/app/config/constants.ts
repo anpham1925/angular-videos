@@ -9,7 +9,8 @@ export const CONSTANTS = {
     },
     AUTH: {
       LOGIN: `${serverLink}/user/login`,
-      SIGN_UP: `${serverLink}/user`
+      SIGN_UP: `${serverLink}/user`,
+      CHECK_TOKEN: `${serverLink}/user/check-token`
     }
   },
   YOUTUBE_WATCH_LINK: 'https://www.youtube.com/embed/'

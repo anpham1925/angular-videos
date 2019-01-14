@@ -2,6 +2,7 @@ import {LoginComponent} from '../components/pages/login/login.component';
 import {Routes} from '@angular/router';
 import {VideoComponent} from '../components/pages/video/video.component';
 import {RegisterComponent} from '../components/pages/register/register.component';
+import {NotfoundComponent} from '../components/pages/notfound/notfound.component';
 import {AuthGuard} from '../guards/auth.guard';
 
 
@@ -11,7 +12,8 @@ export const routes: Routes = [
     component: LoginComponent,
     data: {
       displayName: 'Login',
-      requiredAuth: false
+      requiredAuth: false,
+      isDisplayed: true
     }
   },
   {
@@ -20,7 +22,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       displayName: 'Video',
-      requiredAuth: true
+      requiredAuth: true,
+      isDisplayed: true
     }
   },
   {
@@ -28,7 +31,16 @@ export const routes: Routes = [
     component: RegisterComponent,
     data: {
       displayName: 'Sign up',
-      requiredAuth: false
+      requiredAuth: false,
+      isDisplayed: true
+    }
+  },
+  {
+    path: '**',
+    component: NotfoundComponent,
+    data: {
+      requiredAuth: false,
+      isDisplayed: false
     }
   }
 ];

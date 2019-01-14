@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CONSTANTS} from '../../config/constants';
 
@@ -8,9 +8,14 @@ import {CONSTANTS} from '../../config/constants';
 export class AuthService {
 
   token;
+  currentUser;
+
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+    console.log('ua sao ko goi check token?');
+    this.checkToken();
+  }
 
   public login(data) {
     return this.http.post(CONSTANTS.API_LINK.AUTH.LOGIN, data).toPromise();
@@ -22,12 +27,30 @@ export class AuthService {
 
   public logout() {
     this.token = '';
+    this.currentUser = null;
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('currentUser');
   }
 
   setToken(token) {
-    console.log(this.token);
-    console.log('ua co set token ko???');
     this.token = token;
-    console.log(this.token);
+    window.localStorage.setItem('token', token);
+  }
+
+  setCurrentUser(user) {
+    this.currentUser = user;
+    window.localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  private checkToken() {
+    try {
+      const storedToken = window.localStorage.getItem('token');
+      if (storedToken) {
+        this.setToken(storedToken);
+        this.setCurrentUser(JSON.parse(window.localStorage.getItem('currentUser')));
+      }
+    } catch (error) {
+      console.log('no token');
+    }
   }
 }

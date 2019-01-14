@@ -9,6 +9,9 @@ import {RegisterComponent} from './components/pages/register/register.component'
 import {HeaderComponent} from './components/shared/header/header.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
+import {NotfoundComponent} from './components/pages/notfound/notfound.component';
+import {AgmCoreModule} from '@agm/core';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -16,13 +19,17 @@ import {FormsModule} from '@angular/forms';
     LoginComponent,
     VideoComponent,
     RegisterComponent,
-    HeaderComponent
+    HeaderComponent,
+    NotfoundComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AgmCoreModule.forRoot({
+      apiKey: environment.map_api_key
+    })
   ],
   providers: [
     HttpClientModule
